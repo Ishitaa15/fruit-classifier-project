@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit Classifier</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(120deg, #f6d365, #fda085);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 16px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        h1 {
+            color: #333;
+            margin: 10px 0 5px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            width: 100%;
+            background-color: #fdfdfd;
+        }
+
+        input[type="file"]:hover {
+            border-color: #5cb85c;
+        }
+
+        button {
+            background-color: #5cb85c;
+            color: white;
+            font-size: 1.1rem;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .preview {
+            margin-top: 20px;
+        }
+
+        #preview-img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+            display: none;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        #prediction {
+            margin-top: 20px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .confidence {
+            font-size: 1.1rem;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        .warning {
+            color: #e67e22;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: red;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            p, button { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emoji">🍎🍌🍇🍍</div>
+        <h1>Fruit Classifier</h1>
+        <p>Upload an image of a fruit and let us predict the class for you.</p>
+
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" name="file" id="file" accept="image/*" required><br>
+            <button type="submit">Classify Fruit</button>
+        </form>
+
+        <div class="preview">
+            <img id="preview-img" alt="Image Preview">
+        </div>
+
+        <div id="prediction"></div>
+        <div class="confidence" id="confidence"></div>
+        <div class="warning" id="warning"></div>
+        <div class="error" id="error"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('file');
+        const previewImg = document.getElementById('preview-img');
+
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file) {
+                previewImg.src = URL.createObjectURL(file);
+                previewImg.style.display = 'block';
+            }
+        });
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            document.getElementById('prediction').textContent = '';
+            document.getElementById('confidence').textContent = '';
+            document.getElementById('warning').textContent = '';
+            document.getElementById('error').textContent = '';
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.prediction) {
+                    document.getElementById('prediction').textContent = '🍉 Predicted Class: ' + result.prediction;
+                    if (result.confidence) {
+                        document.getElementById('confidence').textContent = 'Confidence: ' + result.confidence;
+                    }
+                    if (result.warning) {
+                        document.getElementById('warning').textContent = result.warning;
+                    }
+                } else if (result.error) {
+                    document.getElementById('error').textContent = '❌ Error: ' + result.error;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('error').textContent = 'Something went wrong. Please try again.';
+            }
+        });
+    </script>
+</body>
+</html>

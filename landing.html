@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit Classifier</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(120deg, #f6d365, #fda085);
+            overflow: hidden;
+        }
+
+        .landing-container {
+            background-color: #ffffff;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            text-align: center;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .emoji {
+            font-size: 4em;
+            animation: float 2.5s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0); }
+        }
+
+        h1 {
+            margin: 15px 0 10px;
+            font-size: 2.5em;
+            color: #333;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 35px;
+        }
+
+        .start-button {
+            padding: 14px 32px;
+            background: linear-gradient(to right, #56ccf2, #2f80ed);
+            color: white;
+            border: none;
+            font-size: 1em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .start-button:hover {
+            background: linear-gradient(to right, #2f80ed, #56ccf2);
+        }
+
+        footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9em;
+            color: #fff;
+        }
+
+        @media (max-width: 500px) {
+            .landing-container {
+                margin: 0 20px;
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .emoji {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <div class="emoji">🍎🍌🍇🍍</div>
+        <h1>Welcome to Fruit Classifier</h1>
+        <p>Upload a fruit image and we'll tell you what it is using AI magic!</p>
+        <a href="/upload" class="start-button" role="button">Start Classifying</a>
+    </div>
+
+    <footer>
+        Built with ❤️ using TensorFlow and Flask
+    </footer>
+</body>
+</html>
